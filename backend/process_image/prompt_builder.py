@@ -1,18 +1,17 @@
 """
-prompt_builder.py — Bedrock (Claude) complaint text generator for CivicAI.
+prompt_builder.py — Amazon Nova complaint text generator for CivicAI.
 
-Constructs a structured prompt, invokes Amazon Bedrock, and returns
+Constructs a structured prompt, invokes Amazon Nova Micro in us-east-1, and returns
 a formal municipal complaint description.
 """
 
-import json
 import logging
-
-from aws_utils import bedrock_client
-from config import MODEL_ID
+import boto3
 
 logger = logging.getLogger(__name__)
 
+# Nova is in us-east-1
+nova_bedrock_client = boto3.client("bedrock-runtime", region_name="us-east-1")
 
 def generate_complaint_text(
     category: str,
@@ -20,18 +19,7 @@ def generate_complaint_text(
     location: str,
 ) -> str:
     """
-    Generate a formal municipal complaint description using Amazon Bedrock.
-
-    Uses the Claude 3 Messages API format.
-
-    Args:
-        category: Detected issue type (e.g. "pothole").
-        severity: Severity level (e.g. "High").
-        location: Human-readable location or S3 reference.
-
-    Returns:
-        Generated complaint text string.
-        On failure, returns a static fallback description.
+    Generate a formal municipal complaint description using Amazon Nova Micro.
     """
     prompt_text = (
         f"Generate a formal municipal complaint for:\n"
@@ -43,38 +31,32 @@ def generate_complaint_text(
     )
 
     try:
-        body = json.dumps({
-            "anthropic_version": "bedrock-2023-10-25",
-            "max_tokens": 200,
-            "temperature": 0.5,
-            "top_p": 0.9,
-            "messages": [
+        logger.info("Sending text generation prompt to Amazon Nova Micro...")
+        
+        response = nova_bedrock_client.converse(
+            modelId="amazon.nova-micro-v1:0",
+            messages=[
                 {
                     "role": "user",
-                    "content": prompt_text,
+                    "content": [{"text": prompt_text}]
                 }
             ],
-        })
-
-        response = bedrock_client.invoke_model(
-            modelId=MODEL_ID,
-            contentType="application/json",
-            accept="application/json",
-            body=body,
+            inferenceConfig={
+                "temperature": 0.5,
+                "maxTokens": 200
+            }
         )
-
-        response_body = json.loads(response["body"].read())
-        # Claude 3 returns: { "content": [{ "type": "text", "text": "..." }] }
-        completion = response_body["content"][0]["text"].strip()
+        
+        completion = response["output"]["message"]["content"][0]["text"].strip()
 
         if not completion:
-            raise ValueError("Empty completion returned from Bedrock")
+            raise ValueError("Empty completion returned from Nova")
 
-        logger.info("Bedrock complaint text generated successfully")
+        logger.info("Nova complaint text generated successfully")
         return completion
 
     except Exception as exc:
-        logger.error("Bedrock invocation failed: %s", str(exc))
+        logger.error("Nova text invocation failed: %s", str(exc))
         # Graceful fallback — never let the Lambda crash here
         return (
             f"A {severity.lower()}-severity {category} issue has been reported "

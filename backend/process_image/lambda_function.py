@@ -21,6 +21,7 @@ from datetime import datetime, timezone
 from config import TABLE_NAME, SES_SOURCE_EMAIL
 from aws_utils import dynamodb_resource, ses_client
 from inference_client import call_yolo
+from vision_fallback import classify_with_nova
 from severity_rules import calculate_severity
 from department_mapper import get_department
 from prompt_builder import generate_complaint_text
@@ -162,6 +163,18 @@ def lambda_handler(event, context):
     yolo_result = call_yolo(bucket, key)
     category = yolo_result["category"]
     confidence = yolo_result["confidence"]
+
+    # ── 2b. Third-Party Vision Fallback (when YOLO returns Unknown) ──────
+    if category == "Unknown" or confidence == 0.0:
+        logger.info("YOLO returned Unknown — falling back to Amazon Nova Vision")
+        fallback_result = classify_with_nova(bucket, key)
+        if fallback_result["category"] != "Unknown":
+            category = fallback_result["category"]
+            confidence = fallback_result["confidence"]
+            logger.info(
+                "Amazon Nova Vision fallback succeeded — category=%s confidence=%.2f",
+                category, confidence,
+            )
 
     # ── 3. Severity Calculation ──────────────────────────────────────────────
     severity = calculate_severity(category, confidence)

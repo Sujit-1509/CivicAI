@@ -190,11 +190,31 @@ export async function analyzeImage(imageFile) {
         const result = await pollForResult(presign.incident_id);
 
         if (result) {
+            let cat = result.category;
+            let sub = result.category;
+
+            if (!cat || cat.toLowerCase() === 'unknown') {
+                const dept = (result.department || '').toLowerCase();
+                if (dept.includes('road')) {
+                    cat = 'pothole';
+                    sub = 'pothole';
+                } else if (dept.includes('sanitation')) {
+                    cat = 'garbage';
+                    sub = 'garbage_accumulation';
+                } else if (dept.includes('electrical')) {
+                    cat = 'streetlight';
+                    sub = 'broken_streetlight';
+                } else if (dept.includes('water')) {
+                    cat = 'water';
+                    sub = 'pipe_leakage';
+                }
+            }
+
             return {
                 success: true,
                 analysis: {
-                    category: result.category || 'road_issue',
-                    subCategory: result.category || 'pothole',
+                    category: cat || 'road_issue',
+                    subCategory: sub || 'pothole',
                     severity: result.severity || 'medium',
                     confidence: parseFloat(result.confidence) || 0.85,
                     description: result.description || '',

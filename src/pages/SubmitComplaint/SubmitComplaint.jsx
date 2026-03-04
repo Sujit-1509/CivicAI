@@ -4,7 +4,7 @@ import { Upload, MapPin, Loader2, CheckCircle, ArrowLeft, ArrowRight, X, Camera,
 import { analyzeImage, submitComplaint } from '../../services/api';
 import { SeverityBadge, CategoryTag, PriorityBar } from '../../components/Shared/Shared';
 import './SubmitComplaint.css';
-const STEPS = ['Upload Photo', 'AI Analysis', 'Review & Submit', 'Confirmed'];
+const STEPS = ['Upload Photo', 'Provide Details', 'AI Analysis', 'Review & Submit', 'Confirmed'];
 const SubmitComplaint = () => {
     const [step, setStep] = useState(0);
     const [images, setImages] = useState([]);
@@ -44,18 +44,22 @@ const SubmitComplaint = () => {
         setImages((prev) => prev.filter((_, i) => i !== idx));
         setPreviews((prev) => prev.filter((_, i) => i !== idx));
     };
-    const handleAnalyze = async () => {
+    const handleNextToDetails = () => {
         setStep(1);
+    };
+
+    const handleAnalyze = async () => {
+        setStep(2);
         setAnalyzing(true);
         setError(null);
         try {
             const res = await analyzeImage(images[0]);
             setAnalysis(res.analysis);
             if (res.s3Key) setS3Key(res.s3Key);
-            setStep(2);
+            setStep(3);
         } catch (err) {
             setError('Analysis failed. Please try again.');
-            setStep(0);
+            setStep(1);
         } finally {
             setAnalyzing(false);
         }
@@ -77,7 +81,7 @@ const SubmitComplaint = () => {
                 address: location.address,
             });
             setResult(res);
-            setStep(3);
+            setStep(4);
         } catch (err) {
             setError('Submission failed. Please try again.');
         } finally {
@@ -98,7 +102,7 @@ const SubmitComplaint = () => {
                             </div>
                         ))}
                         <div className="progress-line">
-                            <div className="progress-fill" style={{ width: `${(step / 3) * 100}%` }} />
+                            <div className="progress-fill" style={{ width: `${(step / 4) * 100}%` }} />
                         </div>
                     </div>
                     {error && (
@@ -148,13 +152,39 @@ const SubmitComplaint = () => {
                             </div>
                             <div className="step-actions">
                                 <Link to="/" className="btn btn-secondary"><ArrowLeft size={16} /> Back</Link>
-                                <button className="btn btn-primary" disabled={images.length === 0} onClick={handleAnalyze}>
+                                <button className="btn btn-primary" disabled={images.length === 0} onClick={handleNextToDetails}>
+                                    Next Step <ArrowRight size={16} />
+                                </button>
+                            </div>
+                        </div>
+                    )}
+                    {step === 1 && (
+                        <div className="step-content animate-fade-in">
+                            <h2>Provide Details</h2>
+                            <p className="text-muted">Briefly explain the issue in your own words</p>
+
+                            <div className="input-group" style={{ marginTop: 'var(--space-md)' }}>
+                                <label>Your View of the Complaint</label>
+                                <textarea
+                                    className="input"
+                                    placeholder="E.g., Huge pothole causing traffic issues..."
+                                    value={userNote}
+                                    onChange={(e) => setUserNote(e.target.value)}
+                                    rows="4"
+                                />
+                            </div>
+
+                            <div className="step-actions" style={{ marginTop: 'var(--space-md)' }}>
+                                <button className="btn btn-secondary" onClick={() => setStep(0)}>
+                                    <ArrowLeft size={16} /> Back
+                                </button>
+                                <button className="btn btn-primary" onClick={handleAnalyze}>
                                     Analyze with AI <ArrowRight size={16} />
                                 </button>
                             </div>
                         </div>
                     )}
-                    {step === 1 && analyzing && (
+                    {step === 2 && analyzing && (
                         <div className="step-content animate-fade-in text-center">
                             <div className="analyzing-anim">
                                 <div className="ai-ring" />
@@ -170,7 +200,7 @@ const SubmitComplaint = () => {
                             </div>
                         </div>
                     )}
-                    {step === 2 && analysis && (
+                    {step === 3 && analysis && (
                         <div className="step-content animate-fade-in">
                             <h2>AI Analysis Results</h2>
                             <p className="text-muted">Review the automated analysis before submitting</p>
@@ -216,23 +246,22 @@ const SubmitComplaint = () => {
                                 </div>
                             </div>
                             <div className="input-group" style={{ marginTop: 'var(--space-md)' }}>
-                                <label>Additional Notes (Optional)</label>
+                                <label>Your Associated Notes</label>
                                 <textarea
                                     className="input"
-                                    placeholder="Add any extra context..."
                                     value={userNote}
                                     onChange={(e) => setUserNote(e.target.value)}
                                 />
                             </div>
                             <div className="step-actions">
-                                <button className="btn btn-secondary" onClick={() => setStep(0)}><ArrowLeft size={16} /> Back</button>
+                                <button className="btn btn-secondary" onClick={() => setStep(1)}><ArrowLeft size={16} /> Back</button>
                                 <button className="btn btn-success btn-lg" onClick={handleSubmit} disabled={submitting}>
                                     {submitting ? <><Loader2 size={16} className="spin-icon" /> Submitting...</> : <>Submit Complaint <CheckCircle size={16} /></>}
                                 </button>
                             </div>
                         </div>
                     )}
-                    {step === 3 && result && (
+                    {step === 4 && result && (
                         <div className="step-content animate-fade-in text-center">
                             <div className="success-anim">
                                 <CheckCircle size={56} color="var(--success)" />

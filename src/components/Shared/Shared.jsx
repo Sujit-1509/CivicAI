@@ -10,18 +10,37 @@ const CATEGORY_ICONS = {
     trees: Trees,
 };
 export const StatusBadge = ({ status }) => {
-    const config = STATUS_CONFIG[status];
-    if (!config) return null;
+    const safeStatus = (status || '').toLowerCase();
+    const config = STATUS_CONFIG[safeStatus];
+    if (!config) return <span className="badge">{status || 'Unknown'}</span>;
     return <span className={`badge ${config.class}`}>{config.label}</span>;
 };
 export const SeverityBadge = ({ severity }) => {
-    const config = SEVERITY_CONFIG[severity];
-    if (!config) return null;
+    const safeSeverity = (severity || '').toLowerCase();
+    const config = SEVERITY_CONFIG[safeSeverity];
+    if (!config) return <span className="badge badge-low">{severity || 'Pending'}</span>;
     return <span className={`badge ${config.class}`}>{config.label}</span>;
 };
 export const CategoryTag = ({ category }) => {
-    const cat = CATEGORIES[category];
-    if (!cat) return null;
+    const safeCat = (category || '').toLowerCase();
+    const mapping = {
+        pothole: 'road_issue',
+        garbage: 'waste',
+        streetlight: 'lighting',
+        water: 'water'
+    };
+    const mappedKey = mapping[safeCat] || safeCat;
+    const cat = CATEGORIES[mappedKey];
+
+    // If we receive an unknown category entirely, just show a plain badge
+    if (!cat) {
+        return (
+            <span className="category-tag" style={{ '--cat-color': '#64748B' }}>
+                {category || 'Unknown'}
+            </span>
+        );
+    }
+
     const Icon = CATEGORY_ICONS[cat.iconName];
     return (
         <span className="category-tag" style={{ '--cat-color': cat.color }}>

@@ -124,7 +124,7 @@ Citizens authenticate via OTP (SMS) and can track their complaints in real-time.
 | **Hosting** | Amazon S3 + CloudFront CDN |
 | **Database** | Amazon DynamoDB |
 | **Storage** | Amazon S3 (image storage) |
-| **Auth** | AWS SNS (SMS OTP) |
+| **Auth** | AWS SNS / Amazon Pinpoint (SMS OTP) |
 | **AI/ML** | YOLOv8 (custom-trained) on EC2 |
 | **LLM** | Amazon Bedrock (Claude 3 Haiku) |
 | **Email** | Amazon SES |
@@ -226,6 +226,16 @@ npm run build
 ```
 
 Upload the `dist/` folder to your S3 bucket and create a CloudFront invalidation.
+
+### 5. Amazon Pinpoint (SMS OTP) Configuration
+
+CivicAI uses Amazon Pinpoint/SNS for phone authentication. Ensure your AWS account is out of the **SMS Sandbox**.
+
+1. Navigate to the **Amazon Pinpoint Console** in `ap-south-1`.
+2. Access **SMS and voice** settings.
+3. Update your **Account spend limit** to the approved amount (e.g., $50 USD).
+4. *(Optional)* Set up Country Rules to block sending to unintended regions.
+> **Note:** Changes to the spend limit can take up to an hour to reflect across AWS systems.
 
 ---
 
