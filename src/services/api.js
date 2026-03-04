@@ -55,7 +55,13 @@ export async function getComplaints(filters = {}) {
             results = results.filter((c) => c.status === filters.status);
         }
         if (filters.category) {
-            results = results.filter((c) => c.category === filters.category);
+            const mappedCats = {
+                'road_issue': ['road_issue', 'pothole'],
+                'waste': ['waste', 'garbage'],
+                'lighting': ['lighting', 'streetlight', 'broken_streetlight'],
+            };
+            const validCats = mappedCats[filters.category] || [filters.category];
+            results = results.filter((c) => validCats.includes(c.category));
         }
         if (filters.severity) {
             results = results.filter((c) => c.severity === filters.severity);
@@ -196,13 +202,13 @@ export async function analyzeImage(imageFile) {
             if (!cat || cat.toLowerCase() === 'unknown') {
                 const dept = (result.department || '').toLowerCase();
                 if (dept.includes('road')) {
-                    cat = 'pothole';
+                    cat = 'road_issue';
                     sub = 'pothole';
                 } else if (dept.includes('sanitation')) {
-                    cat = 'garbage';
+                    cat = 'waste';
                     sub = 'garbage_accumulation';
                 } else if (dept.includes('electrical')) {
-                    cat = 'streetlight';
+                    cat = 'lighting';
                     sub = 'broken_streetlight';
                 } else if (dept.includes('water')) {
                     cat = 'water';

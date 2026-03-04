@@ -21,7 +21,7 @@ const Home = () => {
                         <div className="hero-text animate-fade-in">
                             <div className="hero-badge">
                                 <img
-                                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Emblem_of_India.svg/80px-Emblem_of_India.svg.png"
+                                    src="https://upload.wikimedia.org/wikipedia/commons/5/55/Emblem_of_India.svg"
                                     alt="Emblem"
                                     className="hero-badge-emblem"
                                 />

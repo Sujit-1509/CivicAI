@@ -8,9 +8,12 @@ const MyComplaints = () => {
     const [complaints, setComplaints] = useState([]);
     const [loading, setLoading] = useState(true);
     const [filter, setFilter] = useState('all');
+    const [categoryFilter, setCategoryFilter] = useState('all');
     useEffect(() => {
         const savedUser = JSON.parse(localStorage.getItem('civicai_user') || '{}');
-        const f = filter === 'all' ? {} : { status: filter };
+        const f = {};
+        if (filter !== 'all') f.status = filter;
+        if (categoryFilter !== 'all') f.category = categoryFilter;
         if (savedUser.phone) {
             f.phone = savedUser.phone;
         }
@@ -19,7 +22,7 @@ const MyComplaints = () => {
             setComplaints(res.complaints || []);
             setLoading(false);
         });
-    }, [filter]);
+    }, [filter, categoryFilter]);
     return (
         <div className="my-complaints-page">
             <div className="container">
@@ -27,16 +30,31 @@ const MyComplaints = () => {
                     <h1 className="section-title">My Complaints</h1>
                     <Link to="/submit" className="btn btn-primary btn-sm">+ Report New</Link>
                 </div>
-                <div className="mc-filters">
-                    {['all', 'submitted', 'assigned', 'in_progress', 'resolved', 'closed'].map((s) => (
-                        <button
-                            key={s}
-                            className={`filter-chip ${filter === s ? 'active' : ''}`}
-                            onClick={() => setFilter(s)}
-                        >
-                            {s === 'all' ? 'All' : s.replace('_', ' ').replace(/\b\w/g, (c) => c.toUpperCase())}
-                        </button>
-                    ))}
+                <div className="mc-filters-container" style={{ marginBottom: '1.5rem' }}>
+                    <div className="mc-filters" style={{ marginBottom: '0.5rem', flexWrap: 'wrap' }}>
+                        <span className="filter-label" style={{ marginRight: '1rem', fontSize: '0.9rem', color: 'var(--text-secondary)', alignSelf: 'center', fontWeight: '500' }}>Status:</span>
+                        {['all', 'submitted', 'assigned', 'in_progress', 'resolved', 'closed'].map((s) => (
+                            <button
+                                key={s}
+                                className={`filter-chip ${filter === s ? 'active' : ''}`}
+                                onClick={() => setFilter(s)}
+                            >
+                                {s === 'all' ? 'All Status' : s.replace('_', ' ').replace(/\b\w/g, (c) => c.toUpperCase())}
+                            </button>
+                        ))}
+                    </div>
+                    <div className="mc-filters" style={{ flexWrap: 'wrap' }}>
+                        <span className="filter-label" style={{ marginRight: '1rem', fontSize: '0.9rem', color: 'var(--text-secondary)', alignSelf: 'center', fontWeight: '500' }}>Category:</span>
+                        {['all', 'road_issue', 'lighting', 'waste', 'water', 'infrastructure', 'vegetation'].map((cat) => (
+                            <button
+                                key={cat}
+                                className={`filter-chip ${categoryFilter === cat ? 'active' : ''}`}
+                                onClick={() => setCategoryFilter(cat)}
+                            >
+                                {cat === 'all' ? 'All Types' : cat.replace('_', ' ').replace(/\b\w/g, (c) => c.toUpperCase())}
+                            </button>
+                        ))}
+                    </div>
                 </div>
                 {loading ? (
                     <Loader text="Loading complaints..." />

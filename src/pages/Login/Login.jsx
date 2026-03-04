@@ -60,7 +60,7 @@ const Login = ({ onLogin }) => {
             <div className="login-card card animate-fade-in">
                 <div className="login-brand">
                     <img
-                        src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Emblem_of_India.svg/120px-Emblem_of_India.svg.png"
+                        src="https://upload.wikimedia.org/wikipedia/commons/5/55/Emblem_of_India.svg"
                         alt="Emblem of India"
                         className="login-emblem-img"
                     />
