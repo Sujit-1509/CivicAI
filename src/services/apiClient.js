@@ -69,7 +69,7 @@ export const api = {
             Object.entries(params).filter(([, v]) => v != null && v !== '')
         ).toString();
         const url = query ? `${endpoint}?${query}` : endpoint;
-        return apiRequest(url, { method: 'GET' });
+        return apiRequest(url, { method: 'GET', cache: 'no-store' });
     },
 
     post: (endpoint, body) =>

@@ -16,6 +16,8 @@ const MyComplaints = () => {
         if (categoryFilter !== 'all') f.category = categoryFilter;
         if (savedUser.phone) {
             f.phone = savedUser.phone;
+        } else if (savedUser.userPhone) {
+            f.phone = savedUser.userPhone;
         }
         setLoading(true);
         getComplaints(f).then((res) => {
