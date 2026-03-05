@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { BrowserRouter, Routes, Route, Navigate, Link } from 'react-router-dom';
+import { HashRouter, Routes, Route, Navigate, Link } from 'react-router-dom';
 import { Landmark } from 'lucide-react';
 import AppLayout from './components/Layout/AppLayout';
 import CitizenLayout from './components/Layout/CitizenLayout';
@@ -29,7 +29,7 @@ function App() {
 
     const userRole = user?.role || 'citizen';
     return (
-        <BrowserRouter>
+        <HashRouter>
             {!user ? (
                 <Routes>
                     <Route path="/" element={<Login onLogin={handleLogin} />} />
@@ -91,7 +91,7 @@ function App() {
                     </footer>
                 </AppLayout>
             )}
-        </BrowserRouter>
+        </HashRouter>
     );
 }
 export default App;
