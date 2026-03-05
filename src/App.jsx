@@ -8,6 +8,7 @@ import SubmitComplaint from './pages/SubmitComplaint/SubmitComplaint';
 import MyComplaints from './pages/MyComplaints/MyComplaints';
 import ComplaintDetail from './pages/ComplaintDetail/ComplaintDetail';
 import Dashboard from './pages/Dashboard/Dashboard';
+import AdminComplaints from './pages/AdminComplaints/AdminComplaints';
 import Worker from './pages/Worker/Worker';
 import Login from './pages/Login/Login';
 import './App.css';
@@ -68,7 +69,7 @@ function App() {
                     <AppLayout role={userRole} user={user}>
                         <Routes>
                             <Route path="/dashboard" element={<Dashboard />} />
-                            <Route path="/complaints" element={<MyComplaints />} />
+                            <Route path="/complaints" element={<AdminComplaints />} />
                             <Route path="/analytics" element={<Dashboard />} />
                             <Route path="/worker" element={<Worker />} />
                             <Route path="/complaint/:id" element={<ComplaintDetail />} />
