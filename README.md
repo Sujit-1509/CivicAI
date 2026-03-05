@@ -10,15 +10,15 @@
 </p>
 
 <p align="center">
-  <a href="https://dpsfubu0rsyo3.cloudfront.net">🌐 Live Demo</a> ·
-  <a href="#architecture">📐 Architecture</a> ·
-  <a href="#tech-stack">🛠️ Tech Stack</a> ·
-  <a href="#setup">⚡ Setup</a>
+  <a href="https://dpsfubu0rsyo3.cloudfront.net">Live Demo</a> ·
+  <a href="#architecture">Architecture</a> ·
+  <a href="#tech-stack">Tech Stack</a> ·
+  <a href="#setup">Setup</a>
 </p>
 
 ---
 
-## 📖 Overview
+## Overview
 
 CivicAI is a fully serverless platform that enables citizens to report civic issues (potholes, garbage, broken streetlights, waterlogging) by simply uploading a photo. The system uses a custom-trained **YOLOv8** computer vision model and **Amazon Bedrock (Claude)** to automatically:
 
@@ -32,7 +32,7 @@ Citizens authenticate via OTP (SMS) and can track their complaints in real-time.
 
 ---
 
-## 🚀 Live Demo
+## Live Demo
 
 > **Production URL:** [https://dpsfubu0rsyo3.cloudfront.net](https://dpsfubu0rsyo3.cloudfront.net)
 
@@ -40,23 +40,23 @@ Citizens authenticate via OTP (SMS) and can track their complaints in real-time.
 
 ---
 
-## ✨ Key Features
+## Key Features
 
 | Feature | Description |
 |---------|-------------|
-| 📸 **Photo-Based Reporting** | Upload a photo → AI detects potholes, garbage, broken lights, waterlogging |
-| 🧠 **YOLOv8 Vision AI** | Custom-trained model with robust issue detection + confidence scoring |
-| 📝 **LLM Descriptions** | Amazon Bedrock (Claude) generates formal complaint text automatically |
-| 📍 **GPS Auto-Detect** | Real-time location tagging with coordinates |
-| 🔐 **OTP Authentication** | Secure phone-based login via AWS SNS |
-| 👤 **User-Specific Tracking** | Citizens only see their own submitted complaints |
-| 📊 **Smart Routing** | Auto-assignment to PWD, Sanitation, Electrical, or Water departments |
-| 📱 **Mobile Responsive** | Fully responsive design for desktop and mobile browsers |
+| **Photo-Based Reporting** | Upload a photo → AI detects potholes, garbage, broken lights, waterlogging |
+| **YOLOv8 Vision AI** | Custom-trained model with robust issue detection + confidence scoring |
+| **LLM Descriptions** | Amazon Bedrock (Claude) generates formal complaint text automatically |
+| **GPS Auto-Detect** | Real-time location tagging with coordinates |
+| **OTP Authentication** | Secure phone-based login via AWS SNS |
+| **User-Specific Tracking** | Citizens only see their own submitted complaints |
+| **Smart Routing** | Auto-assignment to PWD, Sanitation, Electrical, or Water departments |
+| **Mobile Responsive** | Fully responsive design for desktop and mobile browsers |
 
 ---
 
 <a id="architecture"></a>
-## 🏗️ Architecture
+## Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
@@ -113,7 +113,7 @@ Citizens authenticate via OTP (SMS) and can track their complaints in real-time.
 ---
 
 <a id="tech-stack"></a>
-## 🛠️ Tech Stack
+## Tech Stack
 
 | Layer | Technology |
 |-------|-----------|
@@ -131,7 +131,7 @@ Citizens authenticate via OTP (SMS) and can track their complaints in real-time.
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 civicai-frontend/
@@ -187,7 +187,7 @@ civicai-frontend/
 ---
 
 <a id="setup"></a>
-## ⚡ Setup & Installation
+## Setup & Installation
 
 ### Prerequisites
 - Node.js 18+
@@ -239,7 +239,7 @@ CivicAI uses Amazon Pinpoint/SNS for phone authentication. Ensure your AWS accou
 
 ---
 
-## 📚 Documentation
+## Documentation
 
 Detailed setup guides for each AWS service:
 
@@ -251,7 +251,7 @@ Detailed setup guides for each AWS service:
 
 ---
 
-## 🔒 Security
+## Security
 
 - **Authentication**: Phone-based OTP via AWS SNS
 - **Authorization**: JWT tokens with 7-day expiry
@@ -261,18 +261,18 @@ Detailed setup guides for each AWS service:
 
 ---
 
-## 👥 Team
+## Team
 
 Built for the **AI for Bharat Hackathon** — AI for Communities Track.
 
 ---
 
-## 📄 License
+## License
 
 MIT License
 
 ---
 
 <p align="center">
-  <strong>🏛️ CivicAI</strong> — Making Indian cities smarter, one photo at a time. 🇮🇳
+  <strong>CivicAI</strong> — Making Indian cities smarter, one photo at a time.
 </p>
